@@ -15,7 +15,7 @@ SceneOpenGL::SceneOpenGL(std::string titreFenetre, int largeurFenetre, int haute
 		SDL_Quit();
 	}
 
-// Méthodes
+// Methodes
 
 bool SceneOpenGL::initialiserFenetre() {
 
@@ -39,7 +39,7 @@ bool SceneOpenGL::initialiserFenetre() {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-	// Création de la fenêtre
+	// Creation de la fenetre
 
 	m_fenetre = SDL_CreateWindow(m_titreFenetre.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_largeurFenetre, m_hauteurFenetre, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
@@ -51,7 +51,7 @@ bool SceneOpenGL::initialiserFenetre() {
 		return false;
 	}
 
-	// Création du contexte OpenGL
+	// Creation du contexte OpenGL
 
 	m_contexteOpenGL = SDL_GL_CreateContext(m_fenetre);
 
@@ -75,11 +75,11 @@ bool SceneOpenGL::initGL() {
 
 	GLenum initialisationGLEW( glewInit() );
 
-	// Si l'initialisation a échoué :
+	// Si l'initialisation a echoue :
 
 	if(initialisationGLEW != GLEW_OK)
 	{
-		// On affiche l'erreur grâce à la fonction : glewGetErrorString(GLenum code)
+		// On affiche l'erreur grace a la fonction : glewGetErrorString(GLenum code)
 
 		std::cout << "Erreur d'initialisation de GLEW : " << glewGetErrorString(initialisationGLEW) << std::endl;
 
@@ -94,7 +94,7 @@ bool SceneOpenGL::initGL() {
 
 #endif
 
-	// Tout s'est bien passé, on retourne true
+	// Tout s'est bien passe, on retourne true
 
 	return true;
 }
@@ -114,29 +114,25 @@ void drawLine(Vector3 p1, Vector3 p2) {
 	glFlush();
 }
 
-void SceneOpenGL::bouclePrincipale(Vector3 *borders) {
+void SceneOpenGL::bouclePrincipale(Vector3 *borders, std::vector<Vector3> *liste) {
 
 	// Variables
 
-	Vector3 p1 = Vector3(-9999, -9999, 0);
-	Vector3 p2 = Vector3(-9999, 10000, 0);
-	Vector3 p3 = Vector3(10000, -9999, 0);
-	Vector3 p4 = Vector3(10000, 10000, 0);
+	Vector3 p = Vector3(0.1f, 0.1f, 0);
 
 	bool terminer(false);
 
 	// Boucle principale
 
-	std::cout << this->scale << std::endl;
-	// glm::mat4 myScalingMatrix = glm::scale(2.0f, 2.0f ,2.0f);
 		glLoadIdentity();
 		glOrtho(0, 1, 0, 1, 0, 1);
-		glMatrixMode(GL_PROJECTION);
-		glScalef(1 / this->scale.getX(), 1 / this->scale.getY(), 1.0);
-		// glTranslatef(2, 2, 2);
+		glMatrixMode(GL_MODELVIEW_MATRIX);
+		glTranslatef(0.5, 0.3, 0);
+		glScalef(0.1/this->scale.getX(), 0.1/this->scale.getY(), 1);
+		glRotatef(90, 1, 0, 1);
 	while(!terminer)
 	{
-		// Gestion des évènements
+		// Gestion des evenements
 
 
 		// glLoadIdentity();
@@ -149,41 +145,24 @@ void SceneOpenGL::bouclePrincipale(Vector3 *borders) {
 		if(m_evenements.window.event == SDL_WINDOWEVENT_CLOSE)
 			terminer = 1;
 
-		// Nettoyage de l'écran
+		// Nettoyage de l'ecran
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// drawLine(p1, p2);
-
 		// On remplie puis on active le tableau Vertex Attrib 0
-		// gluLookAt(borders[4].getX() * this->scale, borders[4].getY() * this->scale, borders[4].getZ() * this->scale, 0, -1, 0, 0, 0, 1);
-		// drawLine(p1, p2);
-		// drawDot(p1);
-		// drawDot(p2);
-		// drawDot(p3);
-		// drawDot(p4);
+
+		// for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
+			// drawDot(*it);
 
 		drawDot(borders[4]);
-		// drawDot(borders[4] / this->scale);
-/*		std::cout << "first " << borders[0] / this->scale << std::endl;
-		std::cout << "second " << borders[1] / this->scale << std::endl;
-		std::cout << "third " << borders[2] / this->scale << std::endl;
-		std::cout << "fourth " << borders[3] / this->scale << std::endl;
-		std::cout << "middle " << borders[4] / this->scale << std::endl;*/
-		drawLine(p1, p2);
-		drawLine(p1, p3);
-		drawLine(p3, p4);
-		drawLine(p4, p2);
-		// drawLine(borders[0], borders[1]);
+		drawLine(borders[0], borders[1]);
+		drawLine(borders[0], borders[2]);
+		drawLine(borders[1], borders[3]);
+		drawLine(borders[2], borders[3]);
+		// drawLine(borders[0], borders[3]);
 		// drawLine(borders[1], borders[2]);
-		// drawLine(borders[2], borders[3]);
-		// drawLine(borders[3], borders[4]);
-		// drawLine(borders[0] / this->scale, borders[1] / this->scale);
-		// drawLine(borders[1] / this->scale, borders[2] / this->scale);
-		// drawLine(borders[2] / this->scale, borders[3] / this->scale);
-		// drawLine(borders[3] / this->scale, borders[4] / this->scale);
 
-		// Actualisation de la fenêtre
+		// Actualisation de la fenetre
 
 		SDL_GL_SwapWindow(m_fenetre);
 	}

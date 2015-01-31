@@ -167,13 +167,17 @@ void   Parse::setBorders() {
    this->borders[1] = Vector3(minX - xProp, maxY + yProp, 0);
    this->borders[2] = Vector3(maxX + xProp, minY - yProp, 0);
    this->borders[3] = Vector3(maxX + xProp, maxY + yProp, 0);
+
+   for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
+      *it -= this->borders[0];
+
+   for (int i=3; i>=0; i--)
+      this->borders[i] -= this->borders[0];
+
    this->borders[4] = this->borders[3] / 2;
 
-   std::cout << "left - down : " << this->borders[0] << std::endl;
-   std::cout << "left - up : " << this->borders[1] << std::endl;
-   std::cout << "right - down : " << this->borders[2] << std::endl;
-   std::cout << "right - up : " << this->borders[3] << std::endl;
-   std::cout << "middle : " << this->borders[4] << std::endl;
+   for(int i=0; i<5; i++)
+      std::cout << this->borders[i] << std::endl;
 
 }
 

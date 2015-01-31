@@ -7,6 +7,7 @@
 #include <OpenGL/glu.h>
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <vector>
 #include <string>
 
 #include "glm/glm.hpp"
@@ -24,7 +25,7 @@ class SceneOpenGL
 
     bool initialiserFenetre();
     bool initGL();
-    void bouclePrincipale(Vector3 *borders);
+    void bouclePrincipale(Vector3 *borders, std::vector<Vector3> *liste);
 
     private:
 

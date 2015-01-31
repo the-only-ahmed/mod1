@@ -70,6 +70,7 @@ Vector3 &   Vector3::operator-=(Vector3 const &rhs) {
    this->_x -= rhs.getX();
    this->_y -= rhs.getY();
    this->_z -= rhs.getZ();
+
    return (*this);
 }
 

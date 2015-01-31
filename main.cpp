@@ -33,7 +33,7 @@ int		main(int ac, char **av) {
 	if(scene.initGL() == false)
 		return -1;
 
-	scene.bouclePrincipale(borders);
+	scene.bouclePrincipale(borders, liste);
 
 	delete [] borders;
 	delete liste;
