@@ -175,7 +175,7 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 		Vector3 **table = new Vector3*[yMax];
 		for (int i=0; i<yMax; i++)
-			table[i] = new Vector3[100];
+			table[i] = new Vector3[500];
 		glColor3f(1, 0, 0);
 		for (int y=0; y<yMax; y++)
 		{
@@ -187,15 +187,15 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 			}
 			if (points.size() > 0)
 			{
-				for (float t=0; t<1; t+=0.01f)
+				for (float t=0; t<1; t+=0.005f)
 				{
 					Vector3 p = this->getCasteljau(points, points.size()-1, 0, t);
-					table[y][static_cast<int>(t * 100)] = p;
+					table[y][static_cast<int>(t * 500)] = p;
 				}
 			}
 		}
 
-		for (int x=0; x<100; x++)
+		for (int x=0; x<500; x++)
 		{
 			for (int y=0; y<yMax - 1; y++)
 			{
@@ -203,6 +203,9 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 			}
 		}
 
+		for(int i = 0; i < yMax; i++)
+			delete [] table[i];
+		delete [] table;
 		// Actualisation de la fenetre
 
 		SDL_GL_SwapWindow(m_fenetre);
