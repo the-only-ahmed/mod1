@@ -124,13 +124,22 @@ void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3) {
 	glFlush();
 }
 
+Vector3	SceneOpenGL::getCasteljau(std::vector<Vector3> points, int r, int i, float t) {
 
+	if (r == 0)
+		return points[i];
 
-void SceneOpenGL::bouclePrincipale(Vector3 *borders) {
+   Vector3 p1 = this->getCasteljau(points, r - 1, i, t);
+   Vector3 p2 = this->getCasteljau(points, r - 1, i + 1, t);
+
+	Vector3 p = (p2 * t);
+	Vector3 p42 = (p1 * (1 - t));
+	return Vector3(p42 + p);
+}
+
+void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	// Variables
-
-	Vector3 p = Vector3(0.1f, 0.1f, 0);
 
 	bool terminer(false);
 
@@ -161,12 +170,26 @@ void SceneOpenGL::bouclePrincipale(Vector3 *borders) {
 		// On remplie puis on active le tableau Vertex Attrib 0
 
 		glColor3f(0, 1, 0);
-		drawQuad(borders[0], borders[1], borders[3]);
-		drawQuad(borders[0], borders[2], borders[3]);
+		drawDot(M[0][0]);
+		drawDot(M[0][xMax - 1]);
+		drawDot(M[yMax - 1][xMax - 1]);
+		drawDot(M[yMax - 1][0]);
 
 		glColor3f(1, 0, 0);
-		// for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
-			// drawDot(*it);
+		for (int y=0; y<yMax; y++)
+		{
+			std::vector<Vector3> points;
+			for (int x=0; x<xMax; x++)
+			{
+				if (M[y][x] != Vector3())
+					points.push_back(M[y][x]);
+			}
+			for (float t=0; t<1; t+=0.001f)
+			{
+				Vector3 p = this->getCasteljau(points, points.size()-1, 0, t);
+				drawDot(p);
+			}
+		}
 
 		// Actualisation de la fenetre
 

@@ -44,9 +44,10 @@ class Parse
    public:
       Parse(char* av);
 
-      std::vector<Vector3>*   getListe() const;
-      Vector3*                getBorders() const;
-      Vector3**               getMatrix() const;
+      Vector3*     getBorders() const;
+      Vector3**    getMatrix() const;
+      int          getYMax() const;
+      int          getXMax() const;
 };
 
 #endif

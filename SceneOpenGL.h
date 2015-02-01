@@ -25,7 +25,8 @@ class SceneOpenGL
 
     bool initialiserFenetre();
     bool initGL();
-    void bouclePrincipale(Vector3 *borders);
+    void bouclePrincipale(Vector3 **M, int xMax, int yMax);
+    Vector3       getCasteljau(std::vector<Vector3> points, int r, int i, float t);
 
     private:
 

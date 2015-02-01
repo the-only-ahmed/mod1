@@ -177,28 +177,14 @@ void   Parse::setBorders() {
    this->borders[4] = this->borders[3] / 2;
    this->borders[4].setZ(this->max(2));
 
-   std::cout << "Points Nb => " << liste->size() << std::endl;
-
    this->Tri();
    this->FillMatrix();
-
-   std::cout << "Points Nb => " << liste->size() << std::endl;
-
-   for (int y=0; y<yMax; y++)
-   {
-      for (int x=0; x<xMax; x++)
-      {
-         if (M[y][x] != Vector3())
-            std::cout << M[y][x] << "   ";
-         else
-            std::cout << "0   ";
-      }
-      std::cout << std::endl;
-   }
+   delete this->liste;
 }
 
-std::vector<Vector3>*   Parse::getListe() const {return this->liste;}
-Vector3*   Parse::getBorders() const {return this->borders;}
+int         Parse::getXMax() const {return this->xMax;}
+int         Parse::getYMax() const {return this->yMax;}
+Vector3*    Parse::getBorders() const {return this->borders;}
 Vector3**   Parse::getMatrix() const {return this->M;}
 
 void      Parse::Tri() {
@@ -306,5 +292,10 @@ void   Parse::FillMatrix() {
             }
          }
       }
+   }
+   for (int y = 1; y < yMax - 1 ; y++)
+   {
+      M[y][0] = Vector3(0, M[y][1].getY(), 0);
+      M[y][xMax - 1] = Vector3(M[0][xMax - 1].getX(), M[y][1].getY(), 0);
    }
 }

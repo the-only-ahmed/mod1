@@ -24,17 +24,21 @@ int		main(int ac, char **av) {
 	}
 
 	Parse parsing = Parse(av[1]);
-	// liste = parsing.getListe();
 	Vector3 *borders = parsing.getBorders();
-
+	Vector3 **M = parsing.getMatrix();
+	int yMax = parsing.getYMax();
+	int xMax = parsing.getXMax();
 	SceneOpenGL scene("OpenGL", 800, 600, borders[4]);
 	if(scene.initialiserFenetre() == false)
 		return -1;
 	if(scene.initGL() == false)
 		return -1;
 
-	scene.bouclePrincipale(borders);
+	scene.bouclePrincipale(M, xMax, yMax);
 
 	delete [] borders;
+	for(int i = 0; i < yMax; i++)
+		delete [] M[i];
+	delete [] M;
 	return (0);
 }
