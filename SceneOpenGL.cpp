@@ -170,24 +170,36 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		// On remplie puis on active le tableau Vertex Attrib 0
 
 		glColor3f(0, 1, 0);
-		drawDot(M[0][0]);
-		drawDot(M[0][xMax - 1]);
-		drawDot(M[yMax - 1][xMax - 1]);
-		drawDot(M[yMax - 1][0]);
+		drawQuad(M[0][0], M[0][xMax - 1], M[yMax - 1][xMax - 1]);
+		drawQuad(M[0][0], M[yMax - 1][xMax - 1], M[yMax - 1][0]);
 
+		Vector3 **table = new Vector3*[yMax];
+		for (int i=0; i<yMax; i++)
+			table[i] = new Vector3[100];
 		glColor3f(1, 0, 0);
 		for (int y=0; y<yMax; y++)
 		{
 			std::vector<Vector3> points;
 			for (int x=0; x<xMax; x++)
 			{
-				if (M[y][x] != Vector3())
+				if (M[y][x] != Vector3() || (y == yMax - 1 && x == 0) || (y == 0 && x == 0) || (y == 0 && x == xMax - 1) || (y == yMax - 1 && x == xMax - 1))
 					points.push_back(M[y][x]);
 			}
-			for (float t=0; t<1; t+=0.001f)
+			if (points.size() > 0)
 			{
-				Vector3 p = this->getCasteljau(points, points.size()-1, 0, t);
-				drawDot(p);
+				for (float t=0; t<1; t+=0.01f)
+				{
+					Vector3 p = this->getCasteljau(points, points.size()-1, 0, t);
+					table[y][static_cast<int>(t * 100)] = p;
+				}
+			}
+		}
+
+		for (int x=0; x<100; x++)
+		{
+			for (int y=0; y<yMax - 1; y++)
+			{
+				drawLine(table[y][x], table[y + 1][x]);
 			}
 		}
 
