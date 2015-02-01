@@ -6,6 +6,7 @@ SceneOpenGL::SceneOpenGL(std::string titreFenetre, int largeurFenetre, int haute
 	m_hauteurFenetre(hauteurFenetre), m_fenetre(0), m_contexteOpenGL(0) {
 
 		scale = middle / 0.5f;
+		scale.setZ(scale.getZ() * -0.5);
 	}
 
 	SceneOpenGL::~SceneOpenGL() {
@@ -114,7 +115,18 @@ void drawLine(Vector3 p1, Vector3 p2) {
 	glFlush();
 }
 
-void SceneOpenGL::bouclePrincipale(Vector3 *borders, std::vector<Vector3> *liste) {
+void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3) {
+	glBegin(GL_TRIANGLE_STRIP);
+	glVertex3f(p1.getX(), p1.getY(), p1.getZ());
+	glVertex3f(p2.getX(), p2.getY(), p2.getZ());
+	glVertex3f(p3.getX(), p3.getY(), p3.getZ());
+	glEnd();
+	glFlush();
+}
+
+
+
+void SceneOpenGL::bouclePrincipale(Vector3 *borders) {
 
 	// Variables
 
@@ -124,21 +136,18 @@ void SceneOpenGL::bouclePrincipale(Vector3 *borders, std::vector<Vector3> *liste
 
 	// Boucle principale
 
+		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 1, 0, 1, 0, 1);
-		glMatrixMode(GL_MODELVIEW_MATRIX);
-		glTranslatef(0.5, 0.3, 0);
-		glScalef(0.1/this->scale.getX(), 0.1/this->scale.getY(), 1);
-		glRotatef(90, 1, 0, 1);
+		glOrtho(0, 1, 0, 1, 0, 3);
+		glMatrixMode(GL_MODELVIEW);
+		glTranslatef(0.5, 0.3, -2.);
+		glRotatef(60, 1, 0, 0);
+		glRotatef(45, 0, 0, 1);
+		glScalef(0.5/this->scale.getX(), 0.5/this->scale.getY(), 0.5/this->scale.getZ());
+
 	while(!terminer)
 	{
 		// Gestion des evenements
-
-
-		// glLoadIdentity();
-		// glViewport(0, 0, 800, 600);
-		// glMatrixMode(GL_MODELVIEW);
-		// glLoadIdentity();
 
 		SDL_WaitEvent(&m_evenements);
 
@@ -151,16 +160,13 @@ void SceneOpenGL::bouclePrincipale(Vector3 *borders, std::vector<Vector3> *liste
 
 		// On remplie puis on active le tableau Vertex Attrib 0
 
+		glColor3f(0, 1, 0);
+		drawQuad(borders[0], borders[1], borders[3]);
+		drawQuad(borders[0], borders[2], borders[3]);
+
+		glColor3f(1, 0, 0);
 		// for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
 			// drawDot(*it);
-
-		drawDot(borders[4]);
-		drawLine(borders[0], borders[1]);
-		drawLine(borders[0], borders[2]);
-		drawLine(borders[1], borders[3]);
-		drawLine(borders[2], borders[3]);
-		// drawLine(borders[0], borders[3]);
-		// drawLine(borders[1], borders[2]);
 
 		// Actualisation de la fenetre
 

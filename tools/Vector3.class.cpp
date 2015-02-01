@@ -124,6 +124,19 @@ Vector3 &   Vector3::operator/=(Vector3 const &rhs) {
 	return (*this);
 }
 
+bool      Vector3::operator!=(Vector3 const &rhs) const {
+
+   if (this->_x == rhs.getX() && this->_y == rhs.getY() && this->_z == rhs.getZ())
+      return false;
+   return true;
+}
+
+bool      Vector3::operator==(Vector3 const &rhs) const {
+   if (*this != rhs)
+      return false;
+   return true;
+}
+
 /* ------------------------------------------------------------------------- */
 Vector3 const   Vector3::operator+(float const &rhs) {
 

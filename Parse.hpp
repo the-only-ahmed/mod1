@@ -27,18 +27,26 @@ class Parse
    private:
       std::vector<Vector3> *liste;
       Vector3 *borders;
+      Vector3 **M;
+      int      xMax;
+      int      yMax;
 
       std::string   mitSpace(std::string line);
       Vector3       voxelParse(char *ret);
       void          setBorders();
       int           min(int att);
       int           max(int att);
+      void          Tri();
+      void          Tri_y();
+      void          Tri_x();
+      void          FillMatrix();
 
    public:
       Parse(char* av);
 
       std::vector<Vector3>*   getListe() const;
       Vector3*                getBorders() const;
+      Vector3**               getMatrix() const;
 };
 
 #endif

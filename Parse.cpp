@@ -175,11 +175,136 @@ void   Parse::setBorders() {
       this->borders[i] -= this->borders[0];
 
    this->borders[4] = this->borders[3] / 2;
+   this->borders[4].setZ(this->max(2));
 
-   for(int i=0; i<5; i++)
-      std::cout << this->borders[i] << std::endl;
+   std::cout << "Points Nb => " << liste->size() << std::endl;
 
+   this->Tri();
+   this->FillMatrix();
+
+   std::cout << "Points Nb => " << liste->size() << std::endl;
+
+   for (int y=0; y<yMax; y++)
+   {
+      for (int x=0; x<xMax; x++)
+      {
+         if (M[y][x] != Vector3())
+            std::cout << M[y][x] << "   ";
+         else
+            std::cout << "0   ";
+      }
+      std::cout << std::endl;
+   }
 }
 
 std::vector<Vector3>*   Parse::getListe() const {return this->liste;}
 Vector3*   Parse::getBorders() const {return this->borders;}
+Vector3**   Parse::getMatrix() const {return this->M;}
+
+void      Parse::Tri() {
+
+   Tri_y();
+   Tri_x();
+   float  tmp = liste->at(0).getX();
+   int    ret = 1;
+   xMax = 0;
+   yMax = 0;
+   for (int i = 0; i < liste->size(); i++)
+   {
+      if (tmp != liste->at(i).getX())
+      {
+         ret++;
+         tmp = liste->at(i).getX();
+      }
+   }
+   xMax = ret + 2;
+   ret = 1;
+   tmp = liste->at(0).getY();
+   for (int i = 0; i < liste->size(); i++)
+   {
+      if (tmp != liste->at(i).getY())
+      {
+         ret++;
+         tmp = liste->at(i).getY();
+      }
+   }
+   yMax = ret + 2;
+}
+
+void      Parse::Tri_y() {
+
+   bool      swap = true;
+   Vector3   tmp;
+
+   while (swap)
+   {
+      swap = false;
+      for (int i=0; i<liste->size() - 1; i++)
+      {
+         if (liste->at(i).getY() < liste->at(i + 1).getY())
+         {
+            swap = true;
+            tmp = liste->at(i);
+            liste->at(i) = liste->at(i+1);
+            liste->at(i+1) = tmp;
+         }
+      }
+   }
+}
+
+void   Parse::Tri_x() {
+
+   bool      swap = true;
+   Vector3   tmp;
+
+   while (swap)
+   {
+      swap = false;
+      for (int i=0; i<liste->size() - 1; i++)
+      {
+         if (liste->at(i).getY() == liste->at(i + 1).getY())
+         {
+            if (liste->at(i).getX() > liste->at(i + 1).getX())
+            {
+               swap = true;
+               tmp = liste->at(i);
+               liste->at(i) = liste->at(i+1);
+               liste->at(i+1) = tmp;
+            }
+         }
+      }
+   }
+}
+
+void   Parse::FillMatrix() {
+
+   M = new Vector3*[yMax];
+   for(int i = 0; i < yMax; i++)
+      M[i] = new Vector3[xMax];
+   M[0][0] = borders[1];
+   M[0][xMax - 1] = borders[3];
+   M[yMax - 1][xMax - 1] = borders[2];
+   M[yMax - 1][0] = borders[0];
+   for (int y = 0; y < yMax - 1 ; y++)
+   {
+      float ret = liste->at(0).getY();
+      for (int x = 0; x < xMax - 1; x++)
+      {
+         if ((x == 0 && y == 0) || (x == 0 && y == yMax - 1) || (x == xMax - 1 && y == 0) || (x == xMax - 1 && y == yMax - 1))
+            continue;
+
+         if (((y == 0) || (y == yMax - 1)) || ((x == xMax - 1) || x == 0))
+               M[y][x] = Vector3();
+         else if (liste->size() > 0)
+         {
+            if (ret != liste->at(0).getY())
+               M[y][x] = Vector3();
+            else
+            {
+               M[y][x] = liste->at(0);
+               liste->erase(liste->begin());
+            }
+         }
+      }
+   }
+}

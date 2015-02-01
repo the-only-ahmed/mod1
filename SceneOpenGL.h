@@ -25,7 +25,7 @@ class SceneOpenGL
 
     bool initialiserFenetre();
     bool initGL();
-    void bouclePrincipale(Vector3 *borders, std::vector<Vector3> *liste);
+    void bouclePrincipale(Vector3 *borders);
 
     private:
 

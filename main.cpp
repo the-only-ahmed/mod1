@@ -24,7 +24,7 @@ int		main(int ac, char **av) {
 	}
 
 	Parse parsing = Parse(av[1]);
-	liste = parsing.getListe();
+	// liste = parsing.getListe();
 	Vector3 *borders = parsing.getBorders();
 
 	SceneOpenGL scene("OpenGL", 800, 600, borders[4]);
@@ -33,9 +33,8 @@ int		main(int ac, char **av) {
 	if(scene.initGL() == false)
 		return -1;
 
-	scene.bouclePrincipale(borders, liste);
+	scene.bouclePrincipale(borders);
 
 	delete [] borders;
-	delete liste;
 	return (0);
 }

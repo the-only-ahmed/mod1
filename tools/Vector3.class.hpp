@@ -51,6 +51,9 @@ class Vector3
    Vector3 const   operator/(float const &rhs);
    Vector3 &   operator/=(float const &rhs);
 
+   bool        operator==(Vector3 const &rhs) const;
+   bool        operator!=(Vector3 const &rhs) const;
+
    /* ---------- Setters & Getters ---------- */
    float   getX() const;
    float   getY() const;
