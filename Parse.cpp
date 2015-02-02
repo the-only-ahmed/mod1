@@ -43,7 +43,7 @@ Vector3	 Parse::voxelParse(char *ret) {
          y = atoi(&ret[index + 1]);
       }
       else {
-         index = line.find(",", index);
+         index = line.find(",", index + 1);
          z = atoi(&ret[index + 1]);
       }
       i++;
@@ -63,7 +63,7 @@ Parse::Parse(char *av) {
    if (!ifin.good())
    {
       std::string av3 = av;
-      std::cout << "You dont Have rights to read from file" + av3 +"!! cheak rights" << std::endl;
+      std::cout << "You dont Have rights to read from file " + av3 + "!! cheak rights" << std::endl;
       ifin.close();
       return ;
    }
@@ -84,11 +84,11 @@ Parse::Parse(char *av) {
    }
 }
 
-int    Parse::max(int att) {
+int    Parse::max(char att) {
 
    int max = 0;
 
-   if (att == 0)
+   if (att == 'x')
    {
       max = this->liste->at(0).getX();
       for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
@@ -97,7 +97,7 @@ int    Parse::max(int att) {
             max = it->getX();
       }
    }
-   else if (att == 1)
+   else if (att == 'y')
    {
       max = this->liste->at(0).getY();
       for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
@@ -118,11 +118,11 @@ int    Parse::max(int att) {
   return max;
 }
 
-int    Parse::min(int att) {
+int    Parse::min(char att) {
 
    int min;
 
-   if (att == 0)
+   if (att == 'x')
    {
       min = this->liste->at(0).getX();
       for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
@@ -131,7 +131,7 @@ int    Parse::min(int att) {
             min = it->getX();
       }
    }
-   else if (att == 1)
+   else if (att == 'y')
    {
       min = this->liste->at(0).getY();
       for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
@@ -152,14 +152,43 @@ int    Parse::min(int att) {
    return min;
 }
 
+std::vector<float>    Parse::Tri_x(bool swap) {
+
+   float   tmp;
+
+   std::vector<float> sorted;
+   sorted.push_back(0);
+   for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
+      sorted.push_back(it->getX());
+
+   while (swap)
+   {
+      swap = false;
+      for (int i=0; i<liste->size() - 1; i++)
+      {
+         if (sorted[i] > sorted[i + 1])
+         {
+            swap = true;
+            tmp = sorted[i];
+            sorted[i] = sorted[i+1];
+            sorted[i+1] = tmp;
+         }
+      }
+   }
+
+   sort(sorted.begin(), sorted.end());
+   sorted.erase(std::unique(sorted.begin(), sorted.end()), sorted.end());
+   return sorted;
+}
+
 void   Parse::setBorders() {
 
    this->borders = new Vector3[5];
 
-   int minX = this->min(0);
-   int maxX = this->max(0);
-   int minY = this->min(1);
-   int maxY = this->max(1);
+   int minX = this->min('x');
+   int maxX = this->max('x');
+   int minY = this->min('y');
+   int maxY = this->max('y');
    int xProp = round(maxX / 3);
    int yProp = round(maxY / 3);
 
@@ -178,7 +207,8 @@ void   Parse::setBorders() {
    this->borders[4].setZ(this->max(2));
 
    this->Tri();
-   this->FillMatrix();
+   std::vector<float> sorted = this->Tri_x(true);
+   this->FillMatrix(sorted);
    delete this->liste;
 }
 
@@ -191,21 +221,22 @@ void      Parse::Tri() {
 
    Tri_y();
    Tri_x();
-   float  tmp = liste->at(0).getX();
-   int    ret = 1;
+
+   std::vector<float> sorted;
+   for(std::vector<Vector3>::iterator it = liste->begin(); it != liste->end(); ++it)
+      sorted.push_back(it->getX());
+
+   sort(sorted.begin(), sorted.end());
+   sorted.erase(std::unique(sorted.begin(), sorted.end()), sorted.end());
+
+   int    ret = sorted.size();
+
    xMax = 0;
    yMax = 0;
-   for (int i = 0; i < liste->size(); i++)
-   {
-      if (tmp != liste->at(i).getX())
-      {
-         ret++;
-         tmp = liste->at(i).getX();
-      }
-   }
+
    xMax = ret + 2;
    ret = 1;
-   tmp = liste->at(0).getY();
+   float tmp = liste->at(0).getY();
    for (int i = 0; i < liste->size(); i++)
    {
       if (tmp != liste->at(i).getY())
@@ -262,7 +293,22 @@ void   Parse::Tri_x() {
    }
 }
 
-void   Parse::FillMatrix() {
+float  Parse::find(Vector3* Mat) {
+
+   float res = 0;
+
+   for(int x=0; x<xMax; x++)
+   {
+      if (Mat[x] != Vector3())
+      {
+         res = Mat[x].getY();
+         break;
+      }
+   }
+   return res;
+}
+
+void   Parse::FillMatrix(std::vector<float> sorted) {
 
    M = new Vector3*[yMax];
    for(int i = 0; i < yMax; i++)
@@ -283,7 +329,7 @@ void   Parse::FillMatrix() {
                M[y][x] = Vector3();
          else if (liste->size() > 0)
          {
-            if (ret != liste->at(0).getY())
+            if (ret != liste->at(0).getY() || liste->at(0).getX() != sorted[x])
                M[y][x] = Vector3();
             else
             {
@@ -295,7 +341,13 @@ void   Parse::FillMatrix() {
    }
    for (int y = 1; y < yMax - 1 ; y++)
    {
-      M[y][0] = Vector3(0, M[y][1].getY(), 0);
-      M[y][xMax - 1] = Vector3(M[0][xMax - 1].getX(), M[y][1].getY(), 0);
+      float yo = this->find(M[y]);
+      M[y][0] = Vector3(0, yo, 0);
+      M[y][xMax - 1] = Vector3(M[0][xMax - 1].getX(), yo, 0);
+   }
+   for (int x = 1; x < xMax - 1 ; x++)
+   {
+      M[0][x] = Vector3(sorted[x], M[0][0].getY(), 0);
+      M[yMax - 1][x] = Vector3(sorted[x], 0, 0);
    }
 }

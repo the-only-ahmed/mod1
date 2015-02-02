@@ -19,7 +19,9 @@
 #include <string.h>
 #include <cstdlib>
 #include <vector>
+#include <list>
 #include <cmath>
+#include <algorithm>
 #include "tools/Vector3.class.hpp"
 
 class Parse
@@ -34,12 +36,15 @@ class Parse
       std::string   mitSpace(std::string line);
       Vector3       voxelParse(char *ret);
       void          setBorders();
-      int           min(int att);
-      int           max(int att);
+      int           min(char att);
+      int           max(char att);
       void          Tri();
-      void          Tri_y();
       void          Tri_x();
-      void          FillMatrix();
+      void          Tri_y();
+      void          FillMatrix(std::vector<float>);
+      float        find(Vector3* Mat);
+
+      std::vector<float>          Tri_x(bool swap);
 
    public:
       Parse(char* av);

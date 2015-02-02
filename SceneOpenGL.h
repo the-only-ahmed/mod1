@@ -27,6 +27,7 @@ class SceneOpenGL
     bool initGL();
     void bouclePrincipale(Vector3 **M, int xMax, int yMax);
     Vector3       getCasteljau(std::vector<Vector3> points, int r, int i, float t);
+    Vector3**	  CreateTable(Vector3 **M, int xMax, int yMax);
 
     private:
 

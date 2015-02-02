@@ -137,11 +137,38 @@ Vector3	SceneOpenGL::getCasteljau(std::vector<Vector3> points, int r, int i, flo
 	return Vector3(p42 + p);
 }
 
+Vector3**	SceneOpenGL::CreateTable(Vector3 **M, int xMax, int yMax)
+{
+	Vector3 **table = new Vector3*[yMax];
+	for (int i=0; i<yMax; i++)
+		table[i] = new Vector3[100];
+
+	for (int y=0; y<yMax; y++)
+	{
+		std::vector<Vector3> points;
+		for (int x=0; x<xMax; x++)
+		{
+			if (M[y][x] != Vector3() || (y == yMax - 1 && x == 0) || (y == 0 && x == 0) || (y == 0 && x == xMax - 1) || (y == yMax - 1 && x == xMax - 1))
+				points.push_back(M[y][x]);
+		}
+		if (points.size() > 0)
+		{
+			for (float t=0; t<1; t+=0.01f)
+			{
+				Vector3 p = this->getCasteljau(points, points.size()-1, 0, t);
+				table[y][static_cast<int>(t * 100)] = p;
+			}
+		}
+	}
+	return table;
+}
+
 void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	// Variables
 
 	bool terminer(false);
+	Vector3 **table = this->CreateTable(M, xMax, yMax);
 
 	// Boucle principale
 
@@ -151,11 +178,12 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		glMatrixMode(GL_MODELVIEW);
 		glTranslatef(0.5, 0.3, -2.);
 		glRotatef(60, 1, 0, 0);
-		glRotatef(45, 0, 0, 1);
+		glRotatef(45, 0, 0 , 1);
 		glScalef(0.5/this->scale.getX(), 0.5/this->scale.getY(), 0.5/this->scale.getZ());
 
 	while(!terminer)
 	{
+		glRotatef(1, 0, 0, 1);
 		// Gestion des evenements
 
 		SDL_WaitEvent(&m_evenements);
@@ -169,45 +197,34 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 		// On remplie puis on active le tableau Vertex Attrib 0
 
-		glColor3f(0, 1, 0);
+		/*glColor3f(1, 0, 0);
+		for (int y=0; y<yMax; y++)
+		{
+			for (int x=0; x<xMax; x++)
+			{
+				drawDot(M[y][x]);
+			}
+		}*/
+
+		glColor3f(0.5, 0.5, 0.5);
 		drawQuad(M[0][0], M[0][xMax - 1], M[yMax - 1][xMax - 1]);
 		drawQuad(M[0][0], M[yMax - 1][xMax - 1], M[yMax - 1][0]);
 
-		Vector3 **table = new Vector3*[yMax];
-		for (int i=0; i<yMax; i++)
-			table[i] = new Vector3[500];
 		glColor3f(1, 0, 0);
-		for (int y=0; y<yMax; y++)
-		{
-			std::vector<Vector3> points;
-			for (int x=0; x<xMax; x++)
-			{
-				if (M[y][x] != Vector3() || (y == yMax - 1 && x == 0) || (y == 0 && x == 0) || (y == 0 && x == xMax - 1) || (y == yMax - 1 && x == xMax - 1))
-					points.push_back(M[y][x]);
-			}
-			if (points.size() > 0)
-			{
-				for (float t=0; t<1; t+=0.005f)
-				{
-					Vector3 p = this->getCasteljau(points, points.size()-1, 0, t);
-					table[y][static_cast<int>(t * 500)] = p;
-				}
-			}
-		}
 
-		for (int x=0; x<500; x++)
-		{
+		for (int x=0; x<100; x++)
 			for (int y=0; y<yMax - 1; y++)
-			{
 				drawLine(table[y][x], table[y + 1][x]);
-			}
-		}
-
-		for(int i = 0; i < yMax; i++)
-			delete [] table[i];
-		delete [] table;
+/*
+		for (int y=0; y<yMax; y++)
+			for (int x=0; x<500 ; x++)
+				drawDot(table[y][x]);
+*/
 		// Actualisation de la fenetre
 
 		SDL_GL_SwapWindow(m_fenetre);
 	}
+	for(int i = 0; i < yMax; i++)
+		delete [] table[i];
+	delete [] table;
 }
