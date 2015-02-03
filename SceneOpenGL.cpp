@@ -310,24 +310,6 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	algo_bezier(M, xMax, yMax);
 
-	std::cout << "LEFT:" << std::endl;
-
-	for(int x=0; x<xMax - 2; x++)
-	{
-		for (int y=0; y<points_left[x].size(); y++)
-			std::cout << points_left[x][y];
-		std::cout << std::endl;
-	}
-
-	std::cout << "RIGHT:" << std::endl;
-
-	for(int x=0; x<xMax - 2; x++)
-	{
-		for (int y=0; y<points_right[x].size(); y++)
-			std::cout << points_right[x][y];
-		std::cout << std::endl;
-	}
-
 	while(!terminer)
 	{
 		glRotatef(1, 0, 0, 1);
@@ -363,12 +345,12 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 		glColor3f(0, 1, 1);
 		for(int x=0; x<xMax - 2; x++)
-			for (int y=0; y<points_down[x].size() - 1; y++)
+			for (int y=0; y<points_left[x].size() - 1; y++)
 				drawLine(points_left[x][y], points_left[x][y+1]);
 
 		glColor3f(0, 0, 1);
 		for(int x=0; x<xMax - 2; x++)
-			for (int y=0; y<points_down[x].size() - 1; y++)
+			for (int y=0; y<points_right[x].size() - 1; y++)
 				drawLine(points_right[x][y], points_right[x][y+1]);
 
 
