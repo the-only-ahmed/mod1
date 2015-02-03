@@ -338,7 +338,7 @@ void   Parse::FillMatrix(std::vector<float> sorted) {
             }
          }
       }
-   }
+   }/*
    for (int y = 1; y < yMax - 1 ; y++)
    {
       float yo = this->find(M[y]);
@@ -349,5 +349,5 @@ void   Parse::FillMatrix(std::vector<float> sorted) {
    {
       M[0][x] = Vector3(sorted[x], M[0][0].getY(), 0);
       M[yMax - 1][x] = Vector3(sorted[x], 0, 0);
-   }
+   }*/
 }

@@ -163,6 +163,69 @@ Vector3**	SceneOpenGL::CreateTable(Vector3 **M, int xMax, int yMax)
 	return table;
 }
 
+bool	SceneOpenGL::isLast(Vector3** M, int x, int y, int xMax) {
+
+	for(; x < xMax; x++)
+	{
+		if (M[y][x] != Vector3())
+			return false;
+	}
+	return true;
+}
+
+void	SceneOpenGL::algo_bezier(Vector3 **M, int xMax, int yMax) {
+
+	int BigY = yMax - 2;
+	points_high = new std::vector<Vector3>[BigY];
+	points_down = new std::vector<Vector3>[BigY];
+
+	for(int y=1; y<=BigY; y++)
+	{
+		int i=0;
+		for(int x=1; x<xMax; x++)
+		{
+			if (this->isLast(M, x, y, xMax))
+			{
+				if (M[y-1][x] != Vector3())
+					points_high[y-1].push_back(M[y-1][x]);
+			}
+			if (M[y][x] == Vector3())
+				continue;
+			if (i == 0)
+			{
+				if (M[y-1][x-1] != Vector3())
+					points_high[y-1].push_back(M[y-1][x-1]);
+			}
+			points_high[y-1].push_back(M[y][x]);
+			i++;
+		}
+	}
+
+	int a = 0;
+	for(int y=BigY; y>0; y--)
+	{
+		int i=0;
+		for(int x=1; x<xMax; x++)
+		{
+			if (this->isLast(M, x, y, xMax))
+			{
+				if (M[y+1][x] != Vector3())
+					points_down[a].push_back(M[y+1][x]);
+			}
+			if (M[y][x] == Vector3())
+				continue;
+			if (i == 0)
+			{
+				if (M[y+1][x-1] != Vector3() || y == BigY)
+					points_down[a].push_back(M[y+1][x-1]);
+			}
+			points_down[a].push_back(M[y][x]);
+			i++;
+		}
+		a++;
+	}
+}
+
 void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	// Variables
@@ -181,6 +244,26 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		glRotatef(45, 0, 0 , 1);
 		glScalef(0.5/this->scale.getX(), 0.5/this->scale.getY(), 0.5/this->scale.getZ());
 
+	algo_bezier(M, xMax, yMax);
+
+	std::cout << "UP:" << std::endl;
+
+	for(int y=0; y<yMax - 2; y++)
+	{
+		for (int x = 0; x < points_high[y].size(); x++)
+			std::cout << points_high[y][x];
+		std::cout << std::endl;
+	}
+
+	std::cout << "DOWN:" << std::endl;
+
+	for(int y=0; y<yMax - 2; y++)
+	{
+		for (int x = 0; x < points_down[y].size(); x++)
+			std::cout << points_down[y][x];
+		std::cout << std::endl;
+	}
+
 	while(!terminer)
 	{
 		glRotatef(1, 0, 0, 1);
@@ -197,24 +280,34 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 		// On remplie puis on active le tableau Vertex Attrib 0
 
-		/*glColor3f(1, 0, 0);
-		for (int y=0; y<yMax; y++)
-		{
-			for (int x=0; x<xMax; x++)
-			{
-				drawDot(M[y][x]);
-			}
-		}*/
-
 		glColor3f(0.5, 0.5, 0.5);
 		drawQuad(M[0][0], M[0][xMax - 1], M[yMax - 1][xMax - 1]);
+		glColor3f(1, 1, 1);
 		drawQuad(M[0][0], M[yMax - 1][xMax - 1], M[yMax - 1][0]);
 
 		glColor3f(1, 0, 0);
 
-		for (int x=0; x<100; x++)
+			for(int y=0; y<yMax - 2; y++)
+				for (int x = 0; x < points_high[y].size() - 1; x++)
+					drawLine(points_high[y][x], points_high[y][x+1]);
+
+		glColor3f(0, 1, 0);
+		for(int y=0; y<yMax - 2; y++)
+			for (int x = 0; x < points_down[y].size() - 1; x++)
+				drawLine(points_down[y][x], points_down[y][x+1]);
+
+
+
+	/*	for (int x=0; x<100; x++)
+		{
 			for (int y=0; y<yMax - 1; y++)
+			{
+				// drawQuad(table[y][x], table[y + 1][x], table[y][x + 1]);
+				// drawQuad(table[y + 1][x + 1], table[y + 1][x], table[y][x + 1]);
 				drawLine(table[y][x], table[y + 1][x]);
+			}
+		}*/
+
 /*
 		for (int y=0; y<yMax; y++)
 			for (int x=0; x<500 ; x++)
@@ -224,7 +317,7 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 		SDL_GL_SwapWindow(m_fenetre);
 	}
-	for(int i = 0; i < yMax; i++)
+	for(int i=0; i<yMax; i++)
 		delete [] table[i];
 	delete [] table;
 }

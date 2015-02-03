@@ -34,6 +34,17 @@ int		main(int ac, char **av) {
 	if(scene.initGL() == false)
 		return -1;
 
+	for(int y=0; y<yMax; y++)
+	{
+		for(int x=0; x<xMax; x++)
+		{
+			if (M[y][x] != Vector3() || (y == yMax - 1 && x == 0))
+				std::cout << "1 ";
+			else
+				std::cout << "0 ";
+		}
+		std::cout << std::endl;
+	}
 	scene.bouclePrincipale(M, xMax, yMax);
 
 	delete [] borders;
