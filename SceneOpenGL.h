@@ -47,7 +47,7 @@ class SceneOpenGL
     Vector3       getCasteljau(std::vector<Vector3> points, int r, int i, float t);
     Vector3**	  CreateTable(Vector3 **M, int xMax, int yMax);
     void	      algo_bezier(Vector3 **M, int xMax, int yMax);
-    bool         isLast(Vector3** M, int x, int y, int xMax);
+    bool         isLast(Vector3** M, int x, int y, int xMax, int yMax, bool vertical);
 };
 
 #endif

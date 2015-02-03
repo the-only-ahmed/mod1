@@ -163,12 +163,23 @@ Vector3**	SceneOpenGL::CreateTable(Vector3 **M, int xMax, int yMax)
 	return table;
 }
 
-bool	SceneOpenGL::isLast(Vector3** M, int x, int y, int xMax) {
+bool	SceneOpenGL::isLast(Vector3** M, int x, int y, int xMax, int yMax, bool vertical) {
 
-	for(; x < xMax; x++)
+	if (vertical)
 	{
-		if (M[y][x] != Vector3())
-			return false;
+		for(; x<xMax; x++)
+		{
+			if (M[y][x] != Vector3())
+				return false;
+		}
+	}
+	else
+	{
+		for(; y<yMax; y++)
+		{
+			if (M[y][x] != Vector3())
+				return false;
+		}
 	}
 	return true;
 }
@@ -176,38 +187,43 @@ bool	SceneOpenGL::isLast(Vector3** M, int x, int y, int xMax) {
 void	SceneOpenGL::algo_bezier(Vector3 **M, int xMax, int yMax) {
 
 	int BigY = yMax - 2;
+	int BigX = xMax - 2;
 	points_high = new std::vector<Vector3>[BigY];
 	points_down = new std::vector<Vector3>[BigY];
+	points_left = new std::vector<Vector3>[BigX];
+	points_right = new std::vector<Vector3>[BigX];
 
+	int a = 0;
 	for(int y=1; y<=BigY; y++)
 	{
 		int i=0;
 		for(int x=1; x<xMax; x++)
 		{
-			if (this->isLast(M, x, y, xMax))
+			if (this->isLast(M, x, y, xMax, yMax, true))
 			{
 				if (M[y-1][x] != Vector3())
-					points_high[y-1].push_back(M[y-1][x]);
+					points_high[a].push_back(M[y-1][x]);
 			}
 			if (M[y][x] == Vector3())
 				continue;
 			if (i == 0)
 			{
 				if (M[y-1][x-1] != Vector3())
-					points_high[y-1].push_back(M[y-1][x-1]);
+					points_high[a].push_back(M[y-1][x-1]);
 			}
-			points_high[y-1].push_back(M[y][x]);
+			points_high[a].push_back(M[y][x]);
 			i++;
 		}
+		a++;
 	}
 
-	int a = 0;
+	a = 0;
 	for(int y=BigY; y>0; y--)
 	{
 		int i=0;
 		for(int x=1; x<xMax; x++)
 		{
-			if (this->isLast(M, x, y, xMax))
+			if (this->isLast(M, x, y, xMax, yMax, true))
 			{
 				if (M[y+1][x] != Vector3())
 					points_down[a].push_back(M[y+1][x]);
@@ -220,6 +236,54 @@ void	SceneOpenGL::algo_bezier(Vector3 **M, int xMax, int yMax) {
 					points_down[a].push_back(M[y+1][x-1]);
 			}
 			points_down[a].push_back(M[y][x]);
+			i++;
+		}
+		a++;
+	}
+
+	a = 0;
+	for(int x=1; x<=BigX; x++)
+	{
+		int i=0;
+		for(int y=1; y<yMax; y++)
+		{
+			if (this->isLast(M, x, y, yMax, yMax, false))
+			{
+				if (M[y][x-1] != Vector3() || x == 1)
+					points_left[a].push_back(M[y][x-1]);
+			}
+			if (M[y][x] == Vector3())
+				continue;
+			if (i == 0)
+			{
+				if (M[y-1][x-1] != Vector3())
+					points_left[a].push_back(M[y-1][x-1]);
+			}
+			points_left[a].push_back(M[y][x]);
+			i++;
+		}
+		a++;
+	}
+
+	a = 0;
+	for(int x=BigX; x>0; x--)
+	{
+		int i=0;
+		for(int y=1; y<yMax; y++)
+		{
+			if (this->isLast(M, x, y, yMax, yMax, false))
+			{
+				if (M[y][x+1] != Vector3())
+					points_right[a].push_back(M[y][x+1]);
+			}
+			if (M[y][x] == Vector3())
+				continue;
+			if (i == 0)
+			{
+				if (M[y-1][x+1] != Vector3())
+					points_right[a].push_back(M[y-1][x+1]);
+			}
+			points_right[a].push_back(M[y][x]);
 			i++;
 		}
 		a++;
@@ -246,21 +310,21 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	algo_bezier(M, xMax, yMax);
 
-	std::cout << "UP:" << std::endl;
+	std::cout << "LEFT:" << std::endl;
 
-	for(int y=0; y<yMax - 2; y++)
+	for(int x=0; x<xMax - 2; x++)
 	{
-		for (int x = 0; x < points_high[y].size(); x++)
-			std::cout << points_high[y][x];
+		for (int y=0; y<points_left[x].size(); y++)
+			std::cout << points_left[x][y];
 		std::cout << std::endl;
 	}
 
-	std::cout << "DOWN:" << std::endl;
+	std::cout << "RIGHT:" << std::endl;
 
-	for(int y=0; y<yMax - 2; y++)
+	for(int x=0; x<xMax - 2; x++)
 	{
-		for (int x = 0; x < points_down[y].size(); x++)
-			std::cout << points_down[y][x];
+		for (int y=0; y<points_right[x].size(); y++)
+			std::cout << points_right[x][y];
 		std::cout << std::endl;
 	}
 
@@ -296,6 +360,16 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 			for (int x = 0; x < points_down[y].size() - 1; x++)
 				drawLine(points_down[y][x], points_down[y][x+1]);
 
+
+		glColor3f(0, 1, 1);
+		for(int x=0; x<xMax - 2; x++)
+			for (int y=0; y<points_down[x].size() - 1; y++)
+				drawLine(points_left[x][y], points_left[x][y+1]);
+
+		glColor3f(0, 0, 1);
+		for(int x=0; x<xMax - 2; x++)
+			for (int y=0; y<points_down[x].size() - 1; y++)
+				drawLine(points_right[x][y], points_right[x][y+1]);
 
 
 	/*	for (int x=0; x<100; x++)
