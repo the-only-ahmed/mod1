@@ -295,7 +295,7 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 	// Variables
 
 	bool terminer(false);
-	Vector3 **table = this->CreateTable(M, xMax, yMax);
+	// Vector3 **table = this->CreateTable(M, xMax, yMax);
 
 	// Boucle principale
 
@@ -309,6 +309,22 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		glScalef(0.5/this->scale.getX(), 0.5/this->scale.getY(), 0.5/this->scale.getZ());
 
 	algo_bezier(M, xMax, yMax);
+
+	Vector3 **table1 = new Vector3*[yMax-2];
+	for (int i=0; i<yMax-2; i++)
+		table1[i] = new Vector3[100];
+
+	for(int y=0; y<yMax-2; y++)
+	{
+		if (points_high[y].size() > 0)
+		{
+			for (float t=0; t<1; t+=0.01f)
+			{
+				Vector3 p = this->getCasteljau(points_high[y], points_high[y].size()-1, 0, t);
+				table1[y][static_cast<int>(t * 100)] = p;
+			}
+		}
+	}
 
 	while(!terminer)
 	{
@@ -332,10 +348,9 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		drawQuad(M[0][0], M[yMax - 1][xMax - 1], M[yMax - 1][0]);
 
 		glColor3f(1, 0, 0);
-
-			for(int y=0; y<yMax - 2; y++)
-				for (int x = 0; x < points_high[y].size() - 1; x++)
-					drawLine(points_high[y][x], points_high[y][x+1]);
+		for(int y=0; y<yMax - 2; y++)
+			for (int x = 0; x < points_high[y].size() - 1; x++)
+				drawLine(points_high[y][x], points_high[y][x+1]);
 
 		glColor3f(0, 1, 0);
 		for(int y=0; y<yMax - 2; y++)
@@ -354,26 +369,18 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 				drawLine(points_right[x][y], points_right[x][y+1]);
 
 
-	/*	for (int x=0; x<100; x++)
-		{
-			for (int y=0; y<yMax - 1; y++)
-			{
+				/* TRIANGLES */
+
 				// drawQuad(table[y][x], table[y + 1][x], table[y][x + 1]);
 				// drawQuad(table[y + 1][x + 1], table[y + 1][x], table[y][x + 1]);
-				drawLine(table[y][x], table[y + 1][x]);
-			}
-		}*/
 
-/*
-		for (int y=0; y<yMax; y++)
-			for (int x=0; x<500 ; x++)
-				drawDot(table[y][x]);
-*/
+
 		// Actualisation de la fenetre
 
 		SDL_GL_SwapWindow(m_fenetre);
-	}
-	for(int i=0; i<yMax; i++)
-		delete [] table[i];
-	delete [] table;
+	}/*
+	for(int i=0; i<yMax-2; i++)
+		delete [] table1[i];
+	delete [] table1;*/
+
 }
