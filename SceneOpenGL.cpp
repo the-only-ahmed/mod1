@@ -137,7 +137,7 @@ Vector3	SceneOpenGL::getCasteljau(std::vector<Vector3> points, int r, int i, flo
 	return Vector3(p42 + p);
 }
 
-Vector3**	SceneOpenGL::CreateTable(Vector3 **M, int xMax, int yMax)
+/*Vector3**	SceneOpenGL::CreateTable(Vector3 **M, int xMax, int yMax)
 {
 	Vector3 **table = new Vector3*[yMax];
 	for (int i=0; i<yMax; i++)
@@ -160,6 +160,27 @@ Vector3**	SceneOpenGL::CreateTable(Vector3 **M, int xMax, int yMax)
 			}
 		}
 	}
+	return table;
+}*/
+
+Vector3**	SceneOpenGL::CreateTable(std::vector<Vector3>* points, int yMax)
+{
+	Vector3 **table = new Vector3*[yMax];
+	for (int i=0; i<yMax; i++)
+		table[i] = new Vector3[100];
+
+	for (int y=0; y<yMax; y++)
+	{
+		if (points[y].size() > 0)
+		{
+			for (float t=0; t<1; t+=0.01f)
+			{
+				Vector3 p = this->getCasteljau(points[y], points[y].size()-1, 0, t);
+				table[y][static_cast<int>(round(t * 100))] = p;
+			}
+		}
+	}
+
 	return table;
 }
 
@@ -310,22 +331,16 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	algo_bezier(M, xMax, yMax);
 
-	Vector3 **table1 = new Vector3*[yMax-2];
-	for (int i=0; i<yMax-2; i++)
-		table1[i] = new Vector3[100];
-
-	for(int y=0; y<yMax-2; y++)
-	{
-		if (points_high[y].size() > 0)
-		{
-			for (float t=0; t<1; t+=0.01f)
-			{
-				Vector3 p = this->getCasteljau(points_high[y], points_high[y].size()-1, 0, t);
-				table1[y][static_cast<int>(t * 100)] = p;
-			}
-		}
-	}
-
+	Vector3 **table1 = CreateTable(points_high, yMax-2);
+	Vector3 **table2 = CreateTable(points_down, yMax-2);
+	Vector3 **table3 = CreateTable(points_left, xMax-2);
+	Vector3 **table4 = CreateTable(points_right, xMax-2);
+/*
+	for (int y = 0; y < yMax - 2; y++)
+		for (int x =0; x < 99; x++)
+			if (table1[y][x] == Vector3())
+				std::cout << x << " && " << y << std::endl;
+*/
 	while(!terminer)
 	{
 		glRotatef(1, 0, 0, 1);
@@ -346,7 +361,7 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		drawQuad(M[0][0], M[0][xMax - 1], M[yMax - 1][xMax - 1]);
 		glColor3f(1, 1, 1);
 		drawQuad(M[0][0], M[yMax - 1][xMax - 1], M[yMax - 1][0]);
-
+/*
 		glColor3f(1, 0, 0);
 		for(int y=0; y<yMax - 2; y++)
 			for (int x = 0; x < points_high[y].size() - 1; x++)
@@ -368,6 +383,50 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 			for (int y=0; y<points_right[x].size() - 1; y++)
 				drawLine(points_right[x][y], points_right[x][y+1]);
 
+*/
+		glColor3f(1, 0, 0);
+		for(int y=0; y<yMax - 3; y++)
+		{
+			for (int x = 0; x < 99; x++)
+			{
+				drawLine(table1[y][x], table1[y][x+1]);
+				drawQuad(table1[y][x], table1[y + 1][x], table1[y][x + 1]);
+				drawQuad(table1[y + 1][x + 1], table1[y + 1][x], table1[y][x + 1]);
+			}
+		}
+
+		glColor3f(0, 1, 0);
+		for(int y=0; y<yMax - 3; y++)
+		{
+			for (int x = 0; x < 99; x++)
+			{
+				drawLine(table2[y][x], table2[y][x+1]);
+				drawQuad(table2[y][x], table2[y + 1][x], table2[y][x + 1]);
+				drawQuad(table2[y + 1][x + 1], table2[y + 1][x], table2[y][x + 1]);
+			}
+		}
+
+		glColor3f(0, 1, 1);
+		for(int x=0; x<xMax - 3; x++)
+		{
+			for (int y=0; y<99; y++)
+			{
+				drawLine(table3[x][y], table3[x][y+1]);
+				drawQuad(table3[x][y], table3[x + 1][y], table3[x][y + 1]);
+				drawQuad(table3[x + 1][y + 1], table3[x + 1][y], table3[x][y + 1]);
+			}
+		}
+
+		glColor3f(0, 0, 1);
+		for(int x=0; x<xMax - 3; x++)
+		{
+			for (int y=0; y<99; y++)
+			{
+				// drawLine(table4[x][y], table4[x][y+1]);
+				drawQuad(table4[x][y], table4[x + 1][y], table4[x][y + 1]);
+				drawQuad(table4[x + 1][y + 1], table4[x + 1][y], table4[x][y + 1]);
+			}
+		}
 
 				/* TRIANGLES */
 
@@ -378,9 +437,17 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		// Actualisation de la fenetre
 
 		SDL_GL_SwapWindow(m_fenetre);
-	}/*
+	}
 	for(int i=0; i<yMax-2; i++)
 		delete [] table1[i];
-	delete [] table1;*/
-
+	delete [] table1;
+	for(int i=0; i<yMax-2; i++)
+		delete [] table2[i];
+	delete [] table2;
+	for(int i=0; i<xMax-2; i++)
+		delete [] table3[i];
+	delete [] table3;
+	for(int i=0; i<xMax-2; i++)
+		delete [] table4[i];
+	delete [] table4;
 }
