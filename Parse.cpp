@@ -338,13 +338,19 @@ void   Parse::FillMatrix(std::vector<float> sorted) {
             }
          }
       }
-   }/*
+   }
+
+   /* ---------------------- Bords Up & Down -------------------------------- */
+/*
    for (int y = 1; y < yMax - 1 ; y++)
    {
       float yo = this->find(M[y]);
       M[y][0] = Vector3(0, yo, 0);
       M[y][xMax - 1] = Vector3(M[0][xMax - 1].getX(), yo, 0);
    }
+*/
+   /* ---------------------- Bords Left & Right ------------------------------ */
+/*
    for (int x = 1; x < xMax - 1 ; x++)
    {
       M[0][x] = Vector3(sorted[x], M[0][0].getY(), 0);

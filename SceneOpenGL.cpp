@@ -361,7 +361,7 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		drawQuad(M[0][0], M[0][xMax - 1], M[yMax - 1][xMax - 1]);
 		glColor3f(1, 1, 1);
 		drawQuad(M[0][0], M[yMax - 1][xMax - 1], M[yMax - 1][0]);
-/*
+
 		glColor3f(1, 0, 0);
 		for(int y=0; y<yMax - 2; y++)
 			for (int x = 0; x < points_high[y].size() - 1; x++)
@@ -383,15 +383,15 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 			for (int y=0; y<points_right[x].size() - 1; y++)
 				drawLine(points_right[x][y], points_right[x][y+1]);
 
-*/
+/*
 		glColor3f(1, 0, 0);
 		for(int y=0; y<yMax - 3; y++)
 		{
 			for (int x = 0; x < 99; x++)
 			{
 				drawLine(table1[y][x], table1[y][x+1]);
-				drawQuad(table1[y][x], table1[y + 1][x], table1[y][x + 1]);
-				drawQuad(table1[y + 1][x + 1], table1[y + 1][x], table1[y][x + 1]);
+				// drawQuad(table1[y][x], table1[y + 1][x], table1[y][x + 1]);
+				// drawQuad(table1[y + 1][x + 1], table1[y + 1][x], table1[y][x + 1]);
 			}
 		}
 
@@ -401,8 +401,8 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 			for (int x = 0; x < 99; x++)
 			{
 				drawLine(table2[y][x], table2[y][x+1]);
-				drawQuad(table2[y][x], table2[y + 1][x], table2[y][x + 1]);
-				drawQuad(table2[y + 1][x + 1], table2[y + 1][x], table2[y][x + 1]);
+				// drawQuad(table2[y][x], table2[y + 1][x], table2[y][x + 1]);
+				// drawQuad(table2[y + 1][x + 1], table2[y + 1][x], table2[y][x + 1]);
 			}
 		}
 
@@ -412,8 +412,8 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 			for (int y=0; y<99; y++)
 			{
 				drawLine(table3[x][y], table3[x][y+1]);
-				drawQuad(table3[x][y], table3[x + 1][y], table3[x][y + 1]);
-				drawQuad(table3[x + 1][y + 1], table3[x + 1][y], table3[x][y + 1]);
+				// drawQuad(table3[x][y], table3[x + 1][y], table3[x][y + 1]);
+				// drawQuad(table3[x + 1][y + 1], table3[x + 1][y], table3[x][y + 1]);
 			}
 		}
 
@@ -422,12 +422,12 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		{
 			for (int y=0; y<99; y++)
 			{
-				// drawLine(table4[x][y], table4[x][y+1]);
-				drawQuad(table4[x][y], table4[x + 1][y], table4[x][y + 1]);
-				drawQuad(table4[x + 1][y + 1], table4[x + 1][y], table4[x][y + 1]);
+				drawLine(table4[x][y], table4[x][y+1]);
+				// drawQuad(table4[x][y], table4[x + 1][y], table4[x][y + 1]);
+				// drawQuad(table4[x + 1][y + 1], table4[x + 1][y], table4[x][y + 1]);
 			}
 		}
-
+*/
 				/* TRIANGLES */
 
 				// drawQuad(table[y][x], table[y + 1][x], table[y][x + 1]);
