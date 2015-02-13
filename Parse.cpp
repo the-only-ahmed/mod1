@@ -143,6 +143,18 @@ Parse::Parse(char *av) : xMax(64), yMax(64) {
    FillMatrix();
 }
 
+void  Parse::recenter() {
+
+   for(int y=0; y<yMax; y++)
+   {
+      for(int x=0; x<xMax; x++)
+      {
+         M[y][x].setX(M[y][x].getX()-static_cast<int>(round(xMax/2)));
+         M[y][x].setY(M[y][x].getY()-static_cast<int>(round(yMax/2)));
+      }
+   }
+}
+
 int         Parse::getXMax() const {return this->xMax;}
 int         Parse::getYMax() const {return this->yMax;}
 Vector3**   Parse::getMatrix() const {return this->M;}
@@ -175,6 +187,7 @@ void   Parse::FillMatrix() {
          M[y][x].setZ(z);
       }
    }
+   recenter();
 }
 
 double Parse::Weight(double ret) {

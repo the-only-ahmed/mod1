@@ -39,6 +39,7 @@ class Parse
       int           max(char att);
       double        InverseDistanceWeight(Vector3 target);
       double        Weight(double ret);
+      void          recenter();
    public:
       Parse(char* av);
 

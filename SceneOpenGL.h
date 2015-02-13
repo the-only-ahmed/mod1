@@ -9,11 +9,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <unistd.h>
 
 #include "glm/glm.hpp"
 #include "Parse.hpp"
 
 #include "tools/Vector3.class.hpp"
+#include "GLSLProgram.h"
+#include "Water.hpp"
 
 // Classe
 
@@ -29,6 +32,9 @@ class SceneOpenGL
     void bouclePrincipale(Vector3 **M, int xMax, int yMax);
 
    private:
+      void initShaders();
+
+   GLSLProgram _colorProgram;
 
    std::vector<Vector3> * points_high;
    std::vector<Vector3> * points_down;

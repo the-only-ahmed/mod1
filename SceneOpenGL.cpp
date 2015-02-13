@@ -96,7 +96,7 @@ bool SceneOpenGL::initGL() {
 #endif
 
 	// Tout s'est bien passe, on retourne true
-
+	initShaders();
 	return true;
 }
 
@@ -142,7 +142,7 @@ void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, float echelle) {
 void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	// Variables
-
+	Water wat = Water(M, xMax, yMax);
 	bool terminer(false);
 
 	// Boucle principale
@@ -153,14 +153,15 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		glLoadIdentity();
 		glOrtho(0, 1, 0, 1, 0, 3);
 		glMatrixMode(GL_MODELVIEW);
-		glTranslatef(0.8, 0.3, -2.); // (0.5, 0.3, -2.)
+		glTranslatef(0.5, 0.3, -2.); // (0.8, 0.3, -2.)
 		glRotatef(60, 1, 0, 0);
 		glRotatef(125, 0, 0 , 1); // (45, 0, 0, 1)
 		glScalef(1/this->scale.getX(), 1/this->scale.getY(), 1/this->scale.getZ());
 
 	while(!terminer)
 	{
-		// glRotatef(1, 0, 0, 1);
+		wat.AddWater();
+		glRotatef(1, 0, 0, 1);
 		// Gestion des evenements
 
 		SDL_WaitEvent(&m_evenements);
@@ -172,6 +173,7 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
+	//	_colorProgram.use();
 		for(int y=0; y<yMax-1; y++)
 		{
 			for(int x=0; x<xMax-1; x++)
@@ -180,8 +182,29 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 				drawQuad(M[y][x], M[y+1][x+1], M[y+1][x], echelle);
 			}
 		}
-
+		glColor3f(0, 0, 1);
+		for(int z=0; z<16; z++)
+		{
+			for(int y=0; y<yMax; y++)
+			{
+				for(int x=0; x<xMax; x++)
+				{
+					if (wat._MW[z][y][x].getW() == 3)
+						drawDot(wat._MW[z][y][x].getV3());
+				}
+			}
+		}
+		wat.MakeFluid();
+//		_colorProgram.unuse();
 		// Actualisation de la fenetre
 		SDL_GL_SwapWindow(m_fenetre);
 	}
+}
+
+void SceneOpenGL::initShaders() {
+	if (_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag") == -1)
+		return;
+	_colorProgram.addAttribute("vertexPosition");
+	if (_colorProgram.linkShaders() == -1)
+		return;
 }
