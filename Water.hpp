@@ -24,6 +24,10 @@ class Water
       int      _zMax;
       int      tapMax;
 
+      int   getWeight(int x, int y, int z);
+      void  checkWeight(int x, int y, int z);
+      int   maxWeight(int *w, int size);
+
    public:
       Water(Vector3 **M, int xMax, int yMax);
       ~Water();
