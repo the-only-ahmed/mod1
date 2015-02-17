@@ -127,7 +127,7 @@ void drawLine(Vector3 p1, Vector3 p2) {
 	glFlush();
 }
 
-void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, float echelle) {
+void drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle) {
 	glBegin(GL_TRIANGLE_STRIP);
 	setColor(p1.getZ(), echelle);
 	glVertex3f(p1.getX(), p1.getY(), p1.getZ());
@@ -137,6 +137,48 @@ void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, float echelle) {
 	glVertex3f(p3.getX(), p3.getY(), p3.getZ());
 	glEnd();
 	glFlush();
+}
+
+void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
+	glBegin(GL_QUADS);
+	glVertex3f(p1.getX(), p1.getY(), p1.getZ());
+	glVertex3f(p2.getX(), p2.getY(), p2.getZ());
+	glVertex3f(p3.getX(), p3.getY(), p3.getZ());
+	glVertex3f(p4.getX(), p4.getY(), p4.getZ());
+	glEnd();
+	glFlush();
+}
+
+void drawVox(Vector3 p) {
+
+	float x0 = p.getX() - 0.5f;
+	float x1 = p.getX() + 0.5f;
+	float y0 = p.getY() - 0.5f;
+	float y1 = p.getY() + 0.5f;
+	float z0 = p.getZ() - 0.5f;
+	float z1 = p.getZ() + 0.5f;
+
+	Vector3 pLBU = Vector3(x0, y0, z0);
+	Vector3 pLBD = Vector3(x0, y0, z1);
+	Vector3 pRBD = Vector3(x1, y0, z1);
+	Vector3 pRBU = Vector3(x1, y0, z0);
+
+	Vector3 pLFU = Vector3(x0, y1, z0);
+	Vector3 pLFD = Vector3(x0, y1, z1);
+	Vector3 pRFD = Vector3(x1, y1, z1);
+	Vector3 pRFU = Vector3(x1, y1, z0);
+
+	drawQuad(pLBU, pLBD, pLFU, pLFU);
+
+	drawQuad(pLBU, pLBD, pRBU, pRBD);
+
+	drawQuad(pLFU, pLFD, pRFU, pRFD);
+
+	drawQuad(pRBU, pRBD, pRFU, pRFU);
+
+	drawQuad(pLBD, pLFD, pRFD, pRBD);
+
+	drawQuad(pLBU, pRBU, pLFU, pRFU);
 }
 
 void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
@@ -173,16 +215,19 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glEnable (GL_BLEND);
+glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	//	_colorProgram.use();
 		for(int y=0; y<yMax-1; y++)
 		{
 			for(int x=0; x<xMax-1; x++)
 			{
-				drawQuad(M[y][x], M[y][x+1], M[y+1][x+1], echelle);
-				drawQuad(M[y][x], M[y+1][x+1], M[y+1][x], echelle);
+				drawTriangles(M[y][x], M[y][x+1], M[y+1][x+1], echelle);
+				drawTriangles(M[y][x], M[y+1][x+1], M[y+1][x], echelle);
 			}
 		}
-		glColor3f(0, 0, 1);
+		glColor4f(0, 0, 1, 0.01f);
 		for(int z=0; z<16; z++)
 		{
 			for(int y=0; y<yMax; y++)
@@ -190,7 +235,8 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 				for(int x=0; x<xMax; x++)
 				{
 					if (wat._MW[z][y][x].getW() == 3)
-						drawDot(wat._MW[z][y][x].getV3());
+						drawVox(wat._MW[z][y][x].getV3());
+						// drawDot(wat._MW[z][y][x].getV3());
 				}
 			}
 		}
