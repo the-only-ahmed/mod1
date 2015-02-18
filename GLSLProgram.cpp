@@ -4,15 +4,10 @@
 #include <fstream>
 
 //The : _numAttributes(0) ect. is an initialization list. It is a better way to initialize variables, since it avoids an extra copy.
-GLSLProgram::GLSLProgram() : _numAttributes(0), _programID(0), _vertexShaderID(0), _fragmentShaderID(0)
-{
-
-}
+GLSLProgram::GLSLProgram() : _numAttributes(0), _programID(0), _vertexShaderID(0), _fragmentShaderID(0) {}
 
 
-GLSLProgram::~GLSLProgram()
-{
-}
+GLSLProgram::~GLSLProgram() {}
 
 //Compiles the shaders into a form that your GPU can understand
 int GLSLProgram::compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilepath) {
@@ -93,6 +88,13 @@ void GLSLProgram::addAttribute(const std::string& attributeName) {
 
 //enable the shader, and all its attributes
 void GLSLProgram::use() {
+
+   int size = 8;
+
+   GLfloat floatArray[size] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f};
+   int location = glGetUniformLocation(_programID, "array");
+   glUniform1fv(location, size, floatArray);
+
     glUseProgram(_programID);
     //enable all the attributes we added with addAttribute
     for (int i = 0; i < _numAttributes; i++) {

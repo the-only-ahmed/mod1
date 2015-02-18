@@ -1,19 +1,20 @@
 #version 120
-//The vertex shader operates on each vertex
 
-//input data from the VBO. Each vertex is 2 floats
-//in vec3 vertexPosition;
-
-attribute vec3 vertexPosition;
+varying vec2 vertexPosition;
+uniform float array[8];
 
 void main() {
-    //Set the x,y position on the screen
-//    gl_Position.xy = vertexPosition;
-    //the z position is zero since we are in 2D
-//    gl_Position.z = 0.0;
+/*
+   vec4 v = vec4(gl_Vertex);
+      // v.z = sin(5.0*v.z)*0.25;
+      v.z = array[i];*/
 
-    //Indicate that the coordinates are normalized
-    gl_Position.w = 1.0;
+      //gl_Position = gl_ModelViewProjectionMatrix * v;
 
-    gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * vec4(vertexPosition, 0.);
+   for (int i = 0;i < 8;i++)
+   {
+      vec4 v = vec4(gl_Vertex);
+      v.y = array[i];
+      gl_Position = gl_ModelViewProjectionMatrix * v;
+   }
 }

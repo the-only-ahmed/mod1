@@ -202,7 +202,7 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	while(1)
 	{
-		wat.AddWater();
+		// wat.AddWater();
 		glRotatef(1, 0, 0, 1);
 		// Gestion des evenements
 
@@ -220,15 +220,15 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		glEnable (GL_BLEND);
 		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//	_colorProgram.use();
-		for(int y=0; y<yMax-1; y++)
+		_colorProgram.use();
+	/*	for(int y=0; y<yMax-1; y++)
 		{
 			for(int x=0; x<xMax-1; x++)
 			{
 				drawTriangles(M[y][x], M[y][x+1], M[y+1][x+1], echelle);
 				drawTriangles(M[y][x], M[y+1][x+1], M[y+1][x], echelle);
 			}
-		}
+		}/*
 		glColor4f(0, 0.5, 1, 0.02f);
 		for(int z=0; z<16; z++)
 		{
@@ -242,8 +242,8 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 				}
 			}
 		}
-		wat.MakeFluid();
-//		_colorProgram.unuse();
+		wat.MakeFluid();*/
+		_colorProgram.unuse();
 		// Actualisation de la fenetre
 		SDL_GL_SwapWindow(m_fenetre);
 	}
