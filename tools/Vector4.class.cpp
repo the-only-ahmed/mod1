@@ -16,7 +16,7 @@ Vector4::~Vector4() {}
 
 Vector4::Vector4() : _x(0), _y(0), _z(0), _w(0) {}
 
-Vector4::Vector4(Vector3 vec, float w) {
+Vector4::Vector4(Vector3 vec, char w) {
 
    this->_x = vec.getX();
    this->_y = vec.getY();
@@ -24,7 +24,7 @@ Vector4::Vector4(Vector3 vec, float w) {
    this->_w = w;
 }
 
-Vector4::Vector4(float x, float y, float z, float w) {
+Vector4::Vector4(float x, float y, float z, char w) {
 
    this->_x = x;
    this->_y = y;
@@ -55,7 +55,7 @@ Vector4 const   Vector4::operator+(Vector4 const &rhs) {
    float x = this->_x + rhs.getX();
    float y = this->_y + rhs.getY();
    float z = this->_z + rhs.getZ();
-   float w = this->_w + rhs.getW();
+   char w = this->_w + rhs.getW();
 
    return Vector4(x, y, z, w);
 }
@@ -74,7 +74,7 @@ Vector4 const   Vector4::operator-(Vector4 const &rhs) {
    float x = this->_x - rhs.getX();
    float y = this->_y - rhs.getY();
    float z = this->_z - rhs.getZ();
-   float w = this->_w - rhs.getW();
+   char w = this->_w - rhs.getW();
 
    return Vector4(x, y, z, w);
 }
@@ -94,7 +94,7 @@ Vector4 const   Vector4::operator*(Vector4 const &rhs) {
    float x = this->_x * rhs.getX();
    float y = this->_y * rhs.getY();
    float z = this->_z * rhs.getZ();
-   float w = this->_w * rhs.getW();
+   char w = this->_w;// * rhs.getW();
 
    return Vector4(x, y, z, w);
 }
@@ -104,7 +104,7 @@ Vector4 &   Vector4::operator*=(Vector4 const &rhs) {
    this->_x *= rhs.getX();
    this->_y *= rhs.getY();
    this->_z *= rhs.getZ();
-   this->_w *= rhs.getW();
+   // this->_w *= rhs.getW();
 
    return (*this);
 }
@@ -114,7 +114,7 @@ Vector4 const   Vector4::operator/(Vector4 const &rhs) {
 	float x = 0;
 	float y = 0;
 	float z = 0;
-   float w = 0;
+   char w = 0;
 
 	if (rhs.getX())
 		x = this->_x / rhs.getX();
@@ -122,8 +122,8 @@ Vector4 const   Vector4::operator/(Vector4 const &rhs) {
 		y = this->_y / rhs.getY();
 	if (rhs.getZ())
 		z = this->_z / rhs.getZ();
-   if (rhs.getW())
-      w = this->_w / rhs.getW();
+   // if (rhs.getW())
+      w = this->_w;// / rhs.getW();
 
 
    return Vector4(x, y, z, w);
@@ -143,10 +143,10 @@ Vector4 &   Vector4::operator/=(Vector4 const &rhs) {
 		this->_z /= rhs.getZ();
 	else
 		this->_z = 0;
-   if (rhs.getW())
+   /*if (rhs.getW())
       this->_w /= rhs.getW();
    else
-      this->_w = 0;
+      this->_w = 0;*/
 
 	return (*this);
 }
@@ -170,7 +170,7 @@ Vector4 const   Vector4::operator+(float const &rhs) {
    float x = this->_x + rhs;
    float y = this->_y + rhs;
    float z = this->_z + rhs;
-   float w = this->_w + rhs;
+   char w = this->_w;// + rhs;
 
    return Vector4(x, y, z, w);
 }
@@ -180,7 +180,7 @@ Vector4 &   Vector4::operator+=(float const &rhs) {
    this->_x += rhs;
    this->_y += rhs;
    this->_z += rhs;
-   this->_w += rhs;
+   // this->_w += rhs;
 
    return (*this);
 }
@@ -190,7 +190,7 @@ Vector4 const   Vector4::operator-(float const &rhs) {
    float x = this->_x - rhs;
    float y = this->_y - rhs;
    float z = this->_z - rhs;
-   float w = this->_w - rhs;
+   char w = this->_w;// - rhs;
 
    return Vector4(x, y, z, w);
 }
@@ -200,7 +200,7 @@ Vector4 &   Vector4::operator-=(float const &rhs) {
    this->_x -= rhs;
    this->_y -= rhs;
    this->_z -= rhs;
-   this->_w -= rhs;
+   // this->_w -= rhs;
 
    return (*this);
 }
@@ -210,7 +210,7 @@ Vector4 const   Vector4::operator*(float const &rhs) {
    float x = this->_x * rhs;
    float y = this->_y * rhs;
    float z = this->_z * rhs;
-   float w = this->_w * rhs;
+   char w = this->_w;// * rhs;
 
    return Vector4(x, y, z, w);
 }
@@ -220,7 +220,7 @@ Vector4 &   Vector4::operator*=(float const &rhs) {
    this->_x *= rhs;
    this->_y *= rhs;
    this->_z *= rhs;
-   this->_w *= rhs;
+   // this->_w *= rhs;
 
    return (*this);
 }
@@ -230,14 +230,14 @@ Vector4 const   Vector4::operator/(float const &rhs) {
 	float x = 0;
 	float y = 0;
 	float z = 0;
-   float w = 0;
+   char w = 0;
 
 	if (rhs)
 	{
 		x = this->_x / rhs;
 		y = this->_y / rhs;
 		z = this->_z / rhs;
-      w = this->_w / rhs;
+      w = this->_w;// / rhs;
 	}
 
    return Vector4(x, y, z, w);
@@ -250,7 +250,7 @@ Vector4 &   Vector4::operator/=(float const &rhs) {
 		this->_x /= rhs;
 		this->_y /= rhs;
 		this->_z /= rhs;
-      this->_w /= rhs;
+      // this->_w /= rhs;
 	}
 	else
 	{
@@ -271,7 +271,7 @@ double      Vector4::Length() {
 float   Vector4::getX() const {return this->_x;}
 float   Vector4::getY() const {return this->_y;}
 float   Vector4::getZ() const {return this->_z;}
-float   Vector4::getW() const {return this->_w;}
+char   Vector4::getW() const {return this->_w;}
 
 Vector3   Vector4::getV3() const {
 
@@ -282,7 +282,7 @@ Vector3   Vector4::getV3() const {
 void   Vector4::setX(float const x) {this->_x = x;}
 void   Vector4::setY(float const y) {this->_y = y;}
 void   Vector4::setZ(float const z) {this->_z = z;}
-void   Vector4::setW(float const w) {this->_w = w;}
+void   Vector4::setW(char const w) {this->_w = w;}
 
 /* ------------------------------ ToString() ------------------------------ */
 std::ostream &   operator<<(std::ostream &a, Vector4 const &vec) {

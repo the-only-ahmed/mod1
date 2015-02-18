@@ -97,6 +97,7 @@ bool SceneOpenGL::initGL() {
 
 	// Tout s'est bien passe, on retourne true
 	initShaders();
+	// glEnable(GL_DEPTH_TEST);
 	return true;
 }
 
@@ -176,7 +177,7 @@ void drawVox(Vector3 p) {
 
 	drawQuad(pRBU, pRBD, pRFU, pRFU);
 
-	drawQuad(pLBD, pLFD, pRFD, pRBD);
+	// drawQuad(pLBD, pLFD, pRFD, pRBD);
 
 	drawQuad(pLBU, pRBU, pLFU, pRFU);
 }
@@ -185,7 +186,6 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	// Variables
 	Water wat = Water(M, xMax, yMax);
-	bool terminer(false);
 
 	// Boucle principale
 
@@ -200,23 +200,25 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 		glRotatef(125, 0, 0 , 1); // (45, 0, 0, 1)
 		glScalef(1/this->scale.getX(), 1/this->scale.getY(), 1/this->scale.getZ());
 
-	while(!terminer)
+	while(1)
 	{
 		wat.AddWater();
 		glRotatef(1, 0, 0, 1);
 		// Gestion des evenements
 
-		SDL_WaitEvent(&m_evenements);
+		SDL_PollEvent(&m_evenements);
 
 		if(m_evenements.window.event == SDL_WINDOWEVENT_CLOSE)
-			terminer = 1;
+			break;
 
 		// Nettoyage de l'ecran
+
+		// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glEnable (GL_BLEND);
-glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//	_colorProgram.use();
 		for(int y=0; y<yMax-1; y++)
@@ -227,7 +229,7 @@ glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				drawTriangles(M[y][x], M[y+1][x+1], M[y+1][x], echelle);
 			}
 		}
-		glColor4f(0, 0, 1, 0.01f);
+		glColor4f(0, 0.5, 1, 0.02f);
 		for(int z=0; z<16; z++)
 		{
 			for(int y=0; y<yMax; y++)

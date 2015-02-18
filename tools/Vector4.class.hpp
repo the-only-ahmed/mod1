@@ -25,15 +25,15 @@ class Vector4
       float   _x;
       float   _y;
       float   _z;
-      float   _w;
+      char   _w;
 
    public :
 
    /* ---------- Functions ---------- */
    ~Vector4();
    Vector4();
-   Vector4(float x, float y, float z, float w);
-   Vector4(Vector3 vec, float w);
+   Vector4(float x, float y, float z, char w);
+   Vector4(Vector3 vec, char w);
    Vector4(Vector4 const &src);
    Vector4 &   operator=(Vector4 const &rhs);
 
@@ -64,14 +64,14 @@ class Vector4
    float   getX() const;
    float   getY() const;
    float   getZ() const;
-   float   getW() const;
+   char    getW() const;
 
    Vector3   getV3() const;
 
    void   setX(float const x);
    void   setY(float const y);
    void   setZ(float const z);
-   void   setW(float const w);
+   void   setW(char const w);
 };
 
 std::ostream &   operator<<(std::ostream &a, Vector4 const &vec);

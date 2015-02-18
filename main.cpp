@@ -32,17 +32,6 @@ int		main(int ac, char **av) {
 		return -1;
 	if(scene.initGL() == false)
 		return -1;
-/*
-	for(int y=0; y<yMax; y++)
-	{
-		for(int x=0; x<xMax; x++)
-		{
-			// if (M[y][x].getZ() > 15)
-				// continue;
-			std::cout << M[y][x].getZ() << " ";
-		}
-		std::cout << std::endl;
-	}*/
 
 	scene.bouclePrincipale(M, xMax, yMax);
 
