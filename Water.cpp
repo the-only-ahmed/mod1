@@ -19,7 +19,7 @@ Water::~Water() {
    delete[] _MW;*/
 }
 
-Water::Water(Vector3 **M, int xMax, int yMax) : _yMax(yMax), _xMax(xMax), _zMax(16), tapMax(50) {
+Water::Water(Vector3 **M, int xMax, int yMax) : _xMax(xMax), _yMax(yMax), _zMax(16), tapMax(50) {
 
    _MW = new Vector4**[_zMax];
    for(int i=0; i<_zMax; i++)
@@ -48,7 +48,7 @@ Water::Water(Vector3 **M, int xMax, int yMax) : _yMax(yMax), _xMax(xMax), _zMax(
 
 void  Water::MakeFluid() {
 
-   int i =0;
+   // int i =0;
    for(int z=0; z<_zMax; z++)
    {
       for(int y=0; y<_yMax; y++)
@@ -167,8 +167,8 @@ int  Water::checkWeight(int x, int y, int z, int i) {
 
    int   w[8];
    Vector3 p[8];
-   if (!w)
-      return -1;
+   /*if (!w)
+      return -1;*/
    p[0] = Vector3(x-1, y, z);
    p[1] = Vector3(x-1, y-1, z);
    p[2] = Vector3(x-1, y+1, z);
@@ -178,7 +178,7 @@ int  Water::checkWeight(int x, int y, int z, int i) {
    p[6] = Vector3(x, y-1, z);
    p[7] = Vector3(x, y+1, z);
 
-   if (i>3)
+   if (i>2)
    {
       w[0] = getWeight(p[0]);
       w[1] = getWeight(p[1]);

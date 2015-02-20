@@ -223,7 +223,7 @@ Vector3 &   Vector3::operator/=(float const &rhs) {
 
 double      Vector3::Length() {
 
-   double res = pow(this->_x, 2) + pow(this->_y, 2) + pow(this->_z, 2);
+   return pow(this->_x, 2) + pow(this->_y, 2) + pow(this->_z, 2);
 }
 
 /* --------------------------- Setters & Getters --------------------------- */

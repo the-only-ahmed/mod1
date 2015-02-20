@@ -15,8 +15,6 @@
 
 int		main(int ac, char **av) {
 
-	std::vector<Vector3>* liste;
-
 	if (ac != 2) {
 		std::cout << "Use <filename>." << std::endl;
 		std::cout << "Please Give one Argument!!" << std::endl;

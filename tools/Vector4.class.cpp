@@ -264,7 +264,7 @@ Vector4 &   Vector4::operator/=(float const &rhs) {
 
 double      Vector4::Length() {
 
-   double res = pow(this->_x, 2) + pow(this->_y, 2) + pow(this->_z, 2) + pow(this->_w, 2);
+   return pow(this->_x, 2) + pow(this->_y, 2) + pow(this->_z, 2) + pow(this->_w, 2);
 }
 
 /* --------------------------- Setters & Getters --------------------------- */

@@ -58,7 +58,7 @@ void       Parse::normalize(int base, int height) {
    Vector3 max = Vector3(this->max('x'), this->max('y'), this->max('z'));
    double length = max.Length();
 
-   for(int i=0; i<liste.size(); i++)
+   for(unsigned int i=0; i<liste.size(); i++)
    {
       if (length > 0)
       {
@@ -171,7 +171,7 @@ void   Parse::FillMatrix() {
 
    this->normalize(64, 32);
 
-   for(int i=0; i<liste.size(); i++)
+   for(unsigned int i=0; i<liste.size(); i++)
    {
       int x = static_cast<int>(round(liste[i].getX()));
       int y = static_cast<int>(round(liste[i].getY()));
@@ -201,7 +201,7 @@ double Parse::InverseDistanceWeight(Vector3 target) {
    double sum = 0;
    double distance, weight, value;
 
-   for (int i = 0; i < liste.size(); i++)
+   for (unsigned int i = 0; i < liste.size(); i++)
    {
       // Euclidean distance
       distance = sqrt(pow(liste[i].getX() - target.getX(), 2) + pow(liste[i].getY() - target.getY(), 2));
