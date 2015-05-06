@@ -102,12 +102,12 @@ bool SceneOpenGL::initGL() {
 Vector3 setColor(float height, float echelle)
 {
 	height = (height)/echelle;
-	if (height < 0.3f) {
-		return Vector3(height, height, height);
-	} else if (height < 0.8f) {
-		return Vector3(0, height, 0);
+	if (height < 0.2f) {
+		return Vector3(0.9f, 0.9f, 0.9f);
+	} else if (height < 1.0f) {
+		return Vector3(0, 0.9f, 0);
 	} else {
-		return Vector3(height, height, height);
+		return Vector3(0.9f, 0.9f, 0.9f);
 	}
 	return Vector3();
 }
@@ -302,8 +302,20 @@ void drawFace(Vector3 a, Vector3 b, Vector3 c, Vector3 g, Vector3 h, float echel
 		h._x, h._y, h._z  /* sommet 2 */
 	};
 
-	Vector3 cook = setColor(a._z, echelle);
-	float color[] = {cook._x, cook._y, cook._z};
+	Vector3 cooka = setColor(a._z, echelle);
+	Vector3 cookb = setColor(b._z, echelle);
+	Vector3 cookc = setColor(c._z, echelle);
+	Vector3 cookg = setColor(g._z, echelle);
+	Vector3 cookh = setColor(h._z, echelle);
+	float color[] = {
+		cooka._x, cooka._y, cooka._z,
+		cookb._x, cookb._y, cookb._z,
+		cookc._x, cookc._y, cookc._z,
+
+		cooka._x, cooka._y, cooka._z,
+		cookg._x, cookg._y, cookg._z,
+		cookh._x, cookh._y, cookh._z,
+	};
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
@@ -363,7 +375,7 @@ void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
 
 	while(1)
 	{
-		//glRotatef(1, 0, 0, 1);
+		glRotatef(1, 0, 0, 1);
 		// Gestion des evenements
 
 		SDL_PollEvent(&m_evenements);
