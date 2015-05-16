@@ -12,10 +12,12 @@
 
 NAME =  mod1
 
+INCLUDE_DIR = includes
+SRC_DIR = srcs
 SRC = main.cpp Parse.cpp SceneOpenGL.cpp Volcan.cpp Water.cpp \
 		gougoutte_glass.cpp tools/Vector3.class.cpp
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -I INCLUDE_DIR
 
 OPENGL = -F ~/Library/Frameworks -framework \
 			SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -framework OpenGL
@@ -23,7 +25,7 @@ OPENGL = -F ~/Library/Frameworks -framework \
 all: $(NAME)
 
 $(NAME):
-	g++ $(FLAGS) $(OPENGL) $(SRC) -o $(NAME)
+	g++ $(FLAGS) $(OPENGL) $(SRC_DIR)/$(SRC) -o $(NAME)
 	@echo "\033[32mCompiling ...\033[00m"
 
 clean:

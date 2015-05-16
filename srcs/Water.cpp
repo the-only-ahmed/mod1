@@ -177,16 +177,16 @@ void  Water::DoFluid(int x, int y, int z) {
    p[8] = Vector3(x+1, y, z);
 
    int V = _MW[z][y][x].getPerc();
-   int porn;
+   int flag;
    if(z>0)
    {
-      porn = _MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].getPerc();
+      flag = _MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].getPerc();
       if(_MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].getType() == 4)
          _MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].setType(5);
 
-      else if (porn < 100)
+      else if (flag < 100)
       {
-         int ret  = 100 - porn;
+         int ret  = 100 - flag;
          if (ret <= V)
          {
             _MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].addPerc(ret);
@@ -236,14 +236,14 @@ void  Water::DoFluid(int x, int y, int z) {
    while(!liste.empty())
    {
       V = _MW[z][y][x].getPerc();
-      porn = ceil(V/8);
+      flag = ceil(V/8);
       unsigned int i = 0;
       for(; i<liste.size(); i++)
       {
-         if (porn<=0 || liste[i].getPerc()+porn > V-porn)
+         if (flag<=0 || liste[i].getPerc()+flag > V-flag)
             break;
-         V -= porn;
-         liste[i].addPerc(porn);
+         V -= flag;
+         liste[i].addPerc(flag);
          liste[i].setType(3);
 
          if(liste[i].getType() == 4)
@@ -315,13 +315,13 @@ void  Water::DoFluid(int x, int y, int z) {
       _MW[z][y][x].setPerc(V);
       while(!liste.empty())
       {
-         int gega = liste.size()-1;
-         int x1 = static_cast<int>(round(liste[gega].getV3()._x) - xStart);
-         int y1 = static_cast<int>(round(liste[gega].getV3()._y) - yStart);
-         int z1 = static_cast<int>(round(liste[gega].getV3()._z));
+         int temp = liste.size()-1;
+         int x1 = static_cast<int>(round(liste[temp].getV3()._x) - xStart);
+         int y1 = static_cast<int>(round(liste[temp].getV3()._y) - yStart);
+         int z1 = static_cast<int>(round(liste[temp].getV3()._z));
 
-         _MW[z1][y1][x1].setPerc(liste[gega].getPerc());
-         _MW[z1][y1][x1].setType(liste[gega].getType());
+         _MW[z1][y1][x1].setPerc(liste[temp].getPerc());
+         _MW[z1][y1][x1].setType(liste[temp].getType());
          liste.pop_back();
       }
       if(i==0)

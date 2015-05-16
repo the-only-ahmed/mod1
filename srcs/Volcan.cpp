@@ -77,16 +77,16 @@ void  Volcan::DoFluid(Water wat, int x, int y, int z) {
    p[8] = Vector3(x+1, y, z);
 
    int V = wat._MW[z][y][x].getPerc();
-   int porn;
+   int flag;
    if(z>0)
    {
-      porn = wat._MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].getPerc();
+      flag = wat._MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].getPerc();
       if(wat._MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].getType() == 3)
          wat._MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].setType(5);
 
-      else if (porn < 100)
+      else if (flag < 100)
       {
-         int ret  = 100 - porn;
+         int ret  = 100 - flag;
          if (ret <= V)
          {
             wat._MW[static_cast<int>(p[0]._z)][static_cast<int>(p[0]._y)][static_cast<int>(p[0]._x)].addPerc(ret);
@@ -136,15 +136,15 @@ void  Volcan::DoFluid(Water wat, int x, int y, int z) {
    while(!liste.empty())
    {
       V = wat._MW[z][y][x].getPerc();
-      porn = ceil(V/8);
+      flag = ceil(V/8);
       unsigned int i = 0;
       for(; i<liste.size(); i++)
       {
-         if (porn<=0 || liste[i].getPerc()+porn > V-porn)
+         if (flag<=0 || liste[i].getPerc()+flag > V-flag)
             break;
 
-         V -= porn;
-         liste[i].addPerc(porn);
+         V -= flag;
+         liste[i].addPerc(flag);
          liste[i].setType(4);
 
          if(liste[i].getType() == 3)
