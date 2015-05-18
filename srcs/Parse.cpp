@@ -122,7 +122,7 @@ Parse::Parse(char *av) : xMax(64), yMax(64) {
    if (!ifin.good())
    {
       std::string av3 = av;
-      std::cout << "You dont Have rights to read from file " + av3 + "!! cheak rights" << std::endl;
+      std::cout << "You dont Have rights to read from file " + av3 + "!! check rights" << std::endl;
       ifin.close();
       exit(0);
    }
@@ -130,6 +130,13 @@ Parse::Parse(char *av) : xMax(64), yMax(64) {
    {
       while (getline(ifin, line))
          line2 += line;
+      if (line.empty())
+      {
+         std::string av3 = av;
+         std::cout << "file " + av3 + " empty" << std::endl;
+         ifin.close();
+         exit(0);
+      }   
       line2 = mitSpace(line2);
       char* pute = &*line2.begin();
       char* ret = strtok(pute, " ");
